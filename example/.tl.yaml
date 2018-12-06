@@ -1,0 +1,17 @@
+owner: aaa-ncnu
+repo: landing-page-frontend-service
+umbrella: mwg
+deployments:
+    landing-page-frontend-service:
+        method: docker-run
+        build: ["build", "-t", "aaadigital/landing-page-frontend-service:dev", "--target", "build", "."]
+        volumes:
+            - [".", "/usr/src/app"]
+        helpMessages:
+    landing-page-frontend-service-testrunner:
+        method: docker-run
+        build: ["build", "-t", "aaadigital/landing-page-frontend-service:dev-testrunner", "--target", "testrunner", "."]
+        volumes:
+            - [".", "/usr/src/app"]
+        helpMessages:
+            - "container terminal command: docker exec -it mylocal /bin/bash"
