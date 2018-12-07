@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"github.com/aaa-ncnu/telepresence-launcher/pkg/gitcmd"
+	"os"
+
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/k8sClient"
 	"fmt"
 
@@ -8,7 +11,8 @@ import (
 
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/prompts"
 
-	"github.com/spf13/cobra"
+    "github.com/spf13/cobra" 
+
 )
 
 // upCmd represents the up command
@@ -19,7 +23,17 @@ var upCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Howdy! Let's get started.")
 
-        namespaces, err := k8sClient.ListNamespaces()
+        client := k8sClient.NewKubeClient()
+
+        namespaces, err := client.ListNamespaces()
+
+        dir, err := os.Getwd()
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
+
+        branch, err := gitcmd.GetBranchName(dir + "/../")
 
         if err != nil {
 			fmt.Println(err)
@@ -29,26 +43,24 @@ var upCmd = &cobra.Command{
         namespace, err := prompts.NamespaceName(namespaces, viper.GetString("repo"))
         deployment, err := prompts.DeploymentName(viper.GetStringMap("deployments"))
 
-		if err != nil {
+        if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-        fmt.Printf("Your username is %q\n", deployment)
-        fmt.Printf("Your username is %q\n", namespace)
+        k8sdeployment, err := client.GetDeployment(namespace, deployment)
+
+        if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+        fmt.Printf("You are on branch %s\n", branch)
+        fmt.Printf("You have chosen deployment %q\n", k8sdeployment)
+        fmt.Printf("You have chosen namespace %q\n", namespace)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(upCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// upCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// upCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
