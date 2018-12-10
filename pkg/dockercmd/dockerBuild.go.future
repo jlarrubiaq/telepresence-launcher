@@ -1,0 +1,49 @@
+package dockercmd
+
+import (
+	"github.com/docker/docker/pkg/term"
+	"github.com/moby/moby/pkg/jsonmessage"
+	"fmt"
+	"os"
+
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
+	"github.com/docker/docker/pkg/archive"
+	"golang.org/x/net/context"
+)
+
+const defaultDockerAPIVersion = "v1.37"
+
+func DockerBuild() {
+
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	reader, err := archive.TarWithOptions(dir, &archive.TarOptions{})
+
+	defaultHeaders := map[string]string{"User-Agent": "telepresence-launcher"}
+	cli, err := client.NewClient("unix:///var/run/docker.sock", defaultDockerAPIVersion, nil, defaultHeaders)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(cli.ClientVersion())
+	opt := types.ImageBuildOptions{
+		Tags:           []string{"mygotest:test"},
+		SuppressOutput: false,
+		Target:         "server",
+	}
+	output, err := cli.ImageBuild(context.Background(), reader, opt)
+	defer output.Body.Close()
+	fmt.Printf("********* %s **********\n", output.Body)
+
+	//termFd, isTerm := term.GetFdInfo(os.Stderr)
+	//_ = jsonmessage.DisplayJSONMessagesStream(buildResponse.Body, os.Stderr, termFd, isTerm, nil)
+
+	if err == nil {
+		fmt.Printf("Error, %v", err)
+	}
+
+}
