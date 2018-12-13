@@ -5,16 +5,11 @@ import (
 )
 
 // DeploymentName prompts for the repo owner with default provided.
-func DeploymentName(defaultval map[string]interface{}) (string, error) {
-	list := []string{}
-
-	for k := range defaultval {
-		list = append(list, k)
-	}
+func DeploymentName(defaultval []string) (string, error) {
 
 	prompt := promptui.Select{
 		Label: "Deployment you wish to work on ",
-		Items: list,
+		Items: defaultval,
 	}
 
 	_, result, err := prompt.Run()

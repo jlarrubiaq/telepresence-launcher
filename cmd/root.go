@@ -2,13 +2,19 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 
+	"github.com/aaa-ncnu/telepresence-launcher/pkg/tplauncher"
+
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var cfgFile string
+
+// Config contains the LauncherConfig data
+var Config tplauncher.LauncherConfig
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -33,17 +39,27 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	var data []byte
+	var err error
+
 	if cfgFile != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		data, err = ioutil.ReadFile(cfgFile)
+		handleErr(err)
 	} else {
-		// Search config in home directory with name ".cmd" (without extension).
-		viper.AddConfigPath(".")
-		viper.SetConfigName(".tl")
+		// Use default config file ($PWD/.tl.yaml)
+		dir, err := os.Getwd()
+		handleErr(err)
+		data, err = ioutil.ReadFile(dir + "/.tl.yaml")
+		handleErr(err)
 	}
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	Config, err = tplauncher.NewConfig(data)
+}
+
+func handleErr(err error) {
+	if err != nil {
+		fmt.Println("ERROR!!!")
+		log.Fatalln(err)
 	}
 }

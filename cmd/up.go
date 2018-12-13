@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/telepresencecmd"
-	"github.com/aaa-ncnu/telepresence-launcher/pkg/dockercmd"
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/gitcmd"
 	"os"
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/k8sClient"
 	"fmt"
-	"github.com/spf13/viper"
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/prompts"
     "github.com/spf13/cobra" 
 )
@@ -18,66 +16,53 @@ var upCmd = &cobra.Command{
 	Short: "Bring up the service in the current dir",
 	Long:  `Starts an interactive process which will guide you through bringing up a local service using telepresence. Assumes you want to bring up the service in the current working directory.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Howdy! Let's get started.")
+        fmt.Println("Howdy! Let's get started.")
 
         client := k8sClient.NewKubeClient()
 
         namespaces, err := client.ListNamespaces()
+        handleErr(err)
 
         dir, err := os.Getwd()
-        if err != nil {
-            fmt.Println(err)
-            return
-        }
+        handleErr(err)
 
         branch, err := gitcmd.GetBranchName(dir)
+        handleErr(err)
 
-        if err != nil {
-			fmt.Println(err)
-			return
-		}
+        _, err = prompts.IsCorrectBranch(branch)
+        handleErr(err)
 
-        isCorrectBranch, err := prompts.IsCorrectBranch(branch)
+        namespace, err := prompts.NamespaceName(namespaces, Config.Repo)
+        handleErr(err)
 
-        if !isCorrectBranch || err != nil {
-            fmt.Println("Stopping. Please checkout the correct branch and try again.")
-            return
-        }
-
-        namespace, err := prompts.NamespaceName(namespaces, viper.GetString("repo"))
-        deployment, err := prompts.DeploymentName(viper.GetStringMap("deployments"))
-
-        if err != nil {
-			fmt.Println(err)
-			return
-		}
+        deployment, err := prompts.DeploymentName(Config.GetDeploymentPartials())
+        handleErr(err)
 
         k8sdeployment, err := client.GetDeployment(namespace, deployment)
+        handleErr(err)
 
-        if err != nil {
-			fmt.Println(err)
-			return
-        }
-        
-        if buildMethod := viper.GetString("deployments."+deployment+".method"); buildMethod == "docker-run" {
-            dockercmd.DockerBuild(viper.GetStringSlice("deployments."+deployment+".build"))
-        }
+        buildMethods := Config.GetAvailableLaunchMethods(deployment)
+        selectedMethod, err := prompts.LaunchMethod(buildMethods)
+        handleErr(err)
 
-        fmt.Printf("You are on branch %s\n", branch)
+        methodData, err := Config.GetMethodData(deployment, selectedMethod)
+        handleErr(err)
+
+        fmt.Printf("You are on branch %q\n", branch)
         fmt.Printf("You have chosen deployment %q\n", k8sdeployment)
         fmt.Printf("You have chosen namespace %q\n", namespace)
+        fmt.Printf("You have chosen launch method %q\n", selectedMethod)
 
-        volumes := [][]string{}
-        viper.UnmarshalKey("deployments."+deployment+".volumes", &volumes)
+        _, err = prompts.Continue()
+        handleErr(err)
 
-        telepresencecmd.RunTelepresence(
-            viper.GetString("deployments."+deployment+".method"), 
-            volumes,
-            namespace,
-            k8sdeployment,
-            viper.GetString("deployments."+deployment+".image"),
-            viper.GetStringSlice("deployments."+deployment+".commands"),
-        )
+        err = methodData.DoPreLaunch()
+        handleErr(err)
+ 
+        commandPartial := methodData.GetCommandPartial()
+
+        err = telepresencecmd.RunTelepresence("container", namespace, k8sdeployment, commandPartial)
+        handleErr(err)
 
 	},
 }
@@ -85,3 +70,4 @@ var upCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(upCmd)
 }
+

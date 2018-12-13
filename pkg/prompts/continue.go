@@ -4,11 +4,11 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-// IsCorrectBranch asks user if they are on the correct branch.
-func IsCorrectBranch(branch string) (bool, error) {
+// Continue asks user if they would like to proceed.
+func Continue() (bool, error) {
 
 	prompt := promptui.Prompt{
-		Label:     "You are on branch " + branch + ". Is this correct?",
+		Label:     "Continue? ",
 		IsConfirm: true,
 		Default:   "Y",
 	}
