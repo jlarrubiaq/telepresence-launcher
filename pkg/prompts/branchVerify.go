@@ -8,7 +8,7 @@ import (
 func IsCorrectBranch(branch string) (bool, error) {
 
 	prompt := promptui.Prompt{
-		Label:     "You are on branch " + branch + ". Is this correct?",
+		Label:     "You are on branch " + branch + ". Is this correct",
 		IsConfirm: true,
 		Default:   "Y",
 	}

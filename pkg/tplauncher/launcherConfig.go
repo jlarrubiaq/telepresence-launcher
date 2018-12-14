@@ -9,8 +9,9 @@ import (
 
 // LauncherConfig is the outer shell of the config file.
 type LauncherConfig struct {
-	Repo        string `json:"repo"`
-	Deployments map[string]struct {
+	Repo          string `json:"repo"`
+	LabelSelector string `json:"labelSelector"`
+	Deployments   map[string]struct {
 		LaunchMethods []map[string]interface{} `json:"launchMethods"`
 	} `json:"deployments"`
 }

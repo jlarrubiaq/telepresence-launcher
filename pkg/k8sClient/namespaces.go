@@ -8,10 +8,10 @@ import (
 )
 
 //ListNamespaces lists the currently active namespaces.
-func (k KubeClient) ListNamespaces() ([]string, error) {
+func (k KubeClient) ListNamespaces(labelSelector string) ([]string, error) {
 
 	options := metav1.ListOptions{
-		LabelSelector: "app=mwg-singularity",
+		LabelSelector: labelSelector,
 	}
 
 	deployments, err := k.clientSet.ExtensionsV1beta1().Deployments("").List(options)

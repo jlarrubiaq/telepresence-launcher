@@ -8,7 +8,7 @@ import (
 func Continue() (bool, error) {
 
 	prompt := promptui.Prompt{
-		Label:     "Continue? ",
+		Label:     "Continue",
 		IsConfirm: true,
 		Default:   "Y",
 	}

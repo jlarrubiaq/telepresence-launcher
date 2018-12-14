@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/prompts"
 	"github.com/spf13/cobra" 
-	
+
 )
 
 // upCmd represents the up command
@@ -21,7 +21,7 @@ var upCmd = &cobra.Command{
 
         client := k8sClient.NewKubeClient()
 
-        namespaces, err := client.ListNamespaces()
+        namespaces, err := client.ListNamespaces(Config.LabelSelector)
         handleErr(err)
 
         dir, err := os.Getwd()
