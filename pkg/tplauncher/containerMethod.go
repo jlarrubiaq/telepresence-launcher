@@ -64,7 +64,7 @@ func (m ContainerMethod) GetCommandPartial() []string {
 	args = append(args, "container")
 
 	args = append(args, "--docker-run")
-	args = append(args, "-rm", "-it")
+	args = append(args, "--rm", "--init")
 
 	for _, mount := range m.Mounts {
 		args = append(args, "--mount")

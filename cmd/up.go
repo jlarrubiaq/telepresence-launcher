@@ -7,7 +7,8 @@ import (
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/k8sClient"
 	"fmt"
 	"github.com/aaa-ncnu/telepresence-launcher/pkg/prompts"
-    "github.com/spf13/cobra" 
+	"github.com/spf13/cobra" 
+	
 )
 
 // upCmd represents the up command
