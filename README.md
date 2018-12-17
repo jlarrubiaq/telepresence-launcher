@@ -75,7 +75,7 @@ To use Telepresence Launcher you will need the following items set up on your ma
 
 1. Telepresence - you need to [install telepresence](https://www.telepresence.io/reference/install) yourself.
 2. Linux or MacOS - both have been tested. This tool has not been tested on windows.
-   1. NOTE: for MacOS, this tool will mount volumes using Docker for Mac's native NFS support. You must have NFS server running on your local machine and advertise your source code directory in the exports file. This may be made into a configuration item in the future. Read this article for a walkthrough
+   1. NOTE: for MacOS, this tool will mount volumes using Docker for Mac's native NFS support. You must have NFS server running on your local machine and advertise your source code directory in the exports file. This may be made into a configuration item in the future. [Read this article](https://medium.com/@sean.handley/how-to-set-up-docker-for-mac-with-native-nfs-145151458adc) for a walkthrough
 3. A working connection to the kubernetes cluster where your development environment lives.
    1. Telepresence Launcher will use the currently configured kubernetes context on your machine to query the cluster. Before using telepresence launcher, make sure you have a working connection to the cluser and the proper permissions.
 4. Docker (for the `container` method)
