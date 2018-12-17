@@ -2,6 +2,8 @@
 
 `telepresence-launcher` provides a guided interface to replace a Kubernetes deployment in an established K8s context in a consistent manner using [Telepresence](https://www.telepresence.io/).
 
+![gif screencast](example/launcherscreen.gif)
+
 ## Beta!!
 
 The functionality of this application and the structure of the configuration file may change without notice. While in beta we make no promises of backward compatibility!
