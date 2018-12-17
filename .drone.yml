@@ -3,11 +3,11 @@ pipeline:
     image: plugins/git
     tags: true
 
-  release:
+  build:
     image: golang:1.11
     secrets: [github_token]
     commands:
-      curl -sL https://git.io/goreleaser | bash
+      - curl -sL https://git.io/goreleaser | bash
     when:
       event: tag
       branch: master
