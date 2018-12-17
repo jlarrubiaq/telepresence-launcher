@@ -8,6 +8,15 @@
 
 The functionality of this application and the structure of the configuration file may change without notice. While in beta we make no promises of backward compatibility!
 
+## installation
+
+MacOS:
+1. `brew tap aaa-ncnu/aaa`
+2. `brew install telepresence-launcher`
+
+Linux:
+Coming soon!
+
 ## Background
 
 [Telepresence](https://www.telepresence.io/) is an amazing tool for debugging and coding against a service that normally runs in a Kubernetes cluster and has dependencies on other services. Since running an entire kubernetes stack locally is not always feasible due to compute power constraints or complexity, a developer can use telepresence to "patch" their local running service into a full environment running elsewhere (such as a cloud provider).
