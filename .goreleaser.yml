@@ -1,0 +1,44 @@
+builds:
+- binary: telepresence-launcher
+  goos:
+    - darwin
+    - linux
+  goarch:
+    - amd64
+  env:
+    - CGO_ENABLED=0
+  flags:
+    - "-mod=vendor"
+
+brew:
+  name: telepresence-launcher
+  folder: Formula
+  homepage: "https://github.com/aaa-ncnu/telepresence-launcher"
+  description: "telepresence-launcher provides a guided interface to replace a Kubernetes deployment in an established K8s context in a consistent manner using Telepresence."
+  github:
+    owner: aaa-ncnu
+    name: homebrew-aaa
+  commit_author:
+    name: Gary Morse
+    email: gary.morse@arizona.aaa.com
+
+archive:
+  replacements:
+    darwin: MacOS
+    linux: Linux
+    windows: Windows
+    386: i386
+    amd64: x86_64
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'

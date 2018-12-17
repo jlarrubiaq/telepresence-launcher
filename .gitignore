@@ -1,3 +1,6 @@
 # Prevent binaries from committing.
 main
 telepresence-launcher
+
+# Build artifacts
+dist
