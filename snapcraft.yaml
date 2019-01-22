@@ -1,0 +1,17 @@
+name: telepresence-launcher
+version: git
+summary: An interactive launcher for Telepresence.
+description: |
+  An interactive launcher for Telepresence.
+
+grade: stable
+confinement: classic
+
+parts:
+  telepresence-launcher:
+    source: .
+    plugin: go
+
+apps:
+  httplab:
+    command: telepresence-launcher

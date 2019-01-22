@@ -22,17 +22,6 @@ brew:
     name: Gary Morse
     email: gary.morse@arizona.aaa.com
 
-snapcraft:
-  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-  name: telepresence-launcher
-  publish: false
-  summary: Tool for configuring telepresence commands
-  description: |
-    telepresence-launcher provides a guided interface to replace a
-    Kubernetes deployment in an established K8s context in a consistent manner using Telepresence.
-  grade: stable
-  confinement: classic
-
 archive:
   replacements:
     darwin: MacOS
