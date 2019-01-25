@@ -71,8 +71,10 @@ func (m ContainerMethod) GetCommandPartial() []string {
 		args = append(args, escapableEnvVarReplace("type="+mount.Type+",source="+mount.Source+",destination="+mount.Destination))
 	}
 
-	args = append(args, "-e")
-	args = append(args, m.Envs...)
+	for _, env := range m.Envs {
+		args = append(args, "-e")
+		args = append(args, env)
+	}
 
 	args = append(args, m.Image)
 
