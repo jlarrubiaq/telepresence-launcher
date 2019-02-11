@@ -3,6 +3,8 @@ package tplauncher
 import (
 	"os"
 	"os/exec"
+
+	"github.com/aaa-ncnu/telepresence-launcher/pkg/dockercmd"
 )
 
 // ContainerMethod is a LaunchMethod. Describes the necessary data to launch a container with telepresence.
@@ -83,4 +85,9 @@ func (m ContainerMethod) GetCommandPartial() []string {
 	}
 
 	return args
+}
+
+func (m ContainerMethod) DoPostLaunch() error {
+	dockercmd.DockerExec(m.Image, "/bin/sh")
+	return nil
 }

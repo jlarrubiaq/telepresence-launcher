@@ -6,6 +6,7 @@ import "os"
 type LaunchMethod interface {
 	GetCommandPartial() []string
 	DoPreLaunch() error
+	DoPostLaunch() error
 }
 
 //replace env vars in a string slice.
