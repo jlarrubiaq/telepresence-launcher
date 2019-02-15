@@ -29,12 +29,13 @@ require (
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/pflag v1.0.3 // indirect
 	go.opencensus.io v0.19.0 // indirect
+	golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc
 	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
 	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
 	gopkg.in/alecthomas/kingpin.v3-unstable v3.0.0-20180810215634-df19058c872c // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/src-d/go-git.v4 v4.9.1
-	k8s.io/api v0.0.0-20190208171344-de494049e22a // indirect
+	k8s.io/api v0.0.0-20190111032252-67edc246be36 // indirect
 	k8s.io/apimachinery v0.0.0-20190210215030-4521e64aecd3
 	k8s.io/client-go v10.0.0+incompatible
 	k8s.io/klog v0.1.0 // indirect

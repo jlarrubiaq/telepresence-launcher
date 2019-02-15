@@ -1,6 +1,8 @@
 package tplauncher
 
-import "os"
+import (
+	"os"
+)
 
 // LaunchMethod is an interface defining all types of launch methods.
 type LaunchMethod interface {

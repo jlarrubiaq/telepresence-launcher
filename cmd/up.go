@@ -61,31 +61,22 @@ var upCmd = &cobra.Command{
 		err = methodData.DoPreLaunch()
 		handleErr(err)
 
-		commandPartial := methodData.GetCommandPartial()
-		tpDead := make(chan bool)
+		tpArgs := telepresencecmd.RunTelepresenceOptions{
+			Method: "container",
+			Namespace: namespace,
+			Deployment: k8sdeployment,
+			MethodArgs: methodData.GetCommandPartial(),
+			TpChan: make(chan bool),
+		}
 
 		// Run the telepresence command in the background. if dead, kill.
-		go func(chan bool) {
-			err = telepresencecmd.RunTelepresence("container", namespace, k8sdeployment, commandPartial)
-			handleErr(err)
-			tpDead <- true
-		}(tpDead)
+		go telepresencecmd.RunTelepresence(tpArgs)
 
-		postExecDead := make(chan bool)
-
-		go func(chan bool) {
-			err = methodData.DoPostLaunch()
-			if err != nil {
-				handleErr(err)
-				postExecDead <- true
-			} else {
-				postExecDead <- false
-			}
-		}(postExecDead)
+		methodData.DoPostLaunch()
 
 		for {
-			tpChanStatus, postExecChanStatus := <-tpDead, <-postExecDead
-			if tpChanStatus || postExecChanStatus {
+			tpDead := <-tpArgs.TpChan
+			if tpDead {
 				handleErr(errors.New("Process Terminated"))
 			}
 		}

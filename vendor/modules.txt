@@ -158,8 +158,8 @@ github.com/tsenart/deadcode
 # github.com/xanzy/ssh-agent v0.2.0
 github.com/xanzy/ssh-agent
 # golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc
-golang.org/x/crypto/openpgp
 golang.org/x/crypto/ssh/terminal
+golang.org/x/crypto/openpgp
 golang.org/x/crypto/openpgp/armor
 golang.org/x/crypto/openpgp/errors
 golang.org/x/crypto/openpgp/packet
@@ -191,8 +191,8 @@ golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
 # golang.org/x/sys v0.0.0-20190109145017-48ac38b7c8cb
-golang.org/x/sys/windows
 golang.org/x/sys/unix
+golang.org/x/sys/windows
 # golang.org/x/text v0.3.0
 golang.org/x/text/unicode/norm
 golang.org/x/text/transform
@@ -270,7 +270,8 @@ gopkg.in/src-d/go-git.v4/plumbing/transport/server
 gopkg.in/warnings.v0
 # gopkg.in/yaml.v2 v2.2.2
 gopkg.in/yaml.v2
-# k8s.io/api v0.0.0-20190208171344-de494049e22a
+# k8s.io/api v0.0.0-20190111032252-67edc246be36
+k8s.io/api/admissionregistration/v1alpha1
 k8s.io/api/admissionregistration/v1beta1
 k8s.io/api/apps/v1
 k8s.io/api/autoscaling/v1

@@ -1,6 +1,7 @@
 package tplauncher
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 
@@ -80,14 +81,14 @@ func (m ContainerMethod) GetCommandPartial() []string {
 
 	args = append(args, m.Image)
 
-	if len(m.Commands) > 0 {
-		args = append(args, m.Commands...)
-	}
+	args = append(args, "tail", "-f", "/dev/null")
 
 	return args
 }
 
+// DoPostLaunch runs after the telepresence command starts.
 func (m ContainerMethod) DoPostLaunch() error {
-	dockercmd.DockerExec(m.Image, "/bin/sh")
-	return nil
+	notes := fmt.Sprintf("Your shell is starting now. To start your service run: %s", m.Commands)
+	err := dockercmd.DockerExec(m.Image, "/bin/sh", notes)
+	return err
 }
