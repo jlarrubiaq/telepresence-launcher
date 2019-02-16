@@ -12,6 +12,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type Flags struct {
+	terminal bool
+}
+
+var cmdflags Flags
+
 // upCmd represents the up command
 var upCmd = &cobra.Command{
 	Use:   "up",
@@ -72,8 +78,8 @@ var upCmd = &cobra.Command{
 		// Run the telepresence command in the background. if dead, kill.
 		go telepresencecmd.RunTelepresence(tpArgs)
 
-		methodData.DoPostLaunch()
-
+		methodData.DoPostLaunch(cmdflags.terminal)
+		
 		for {
 			tpDead := <-tpArgs.TpChan
 			if tpDead {
@@ -84,5 +90,6 @@ var upCmd = &cobra.Command{
 }
 
 func init() {
+	upCmd.Flags().BoolVar(&cmdflags.terminal, "terminal", false, "(experimental) Automatically launch a terminal after initial setup.")
 	rootCmd.AddCommand(upCmd)
 }

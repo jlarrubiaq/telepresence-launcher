@@ -87,8 +87,22 @@ func (m ContainerMethod) GetCommandPartial() []string {
 }
 
 // DoPostLaunch runs after the telepresence command starts.
-func (m ContainerMethod) DoPostLaunch() error {
-	notes := fmt.Sprintf("Your shell is starting now. To start your service run: %s", m.Commands)
-	err := dockercmd.DockerExec(m.Image, "/bin/sh", notes)
-	return err
+func (m ContainerMethod) DoPostLaunch(terminalFlag bool) error {
+	up, id, err := dockercmd.IsContainerUp(m.Image)
+	if !up || err != nil {
+		return err
+	}
+
+	if terminalFlag {
+		notes := fmt.Sprintf("Your shell is starting now. To start your service run: %s", m.Commands)
+		err := dockercmd.DockerExec(id, "/bin/sh", notes)
+		return err
+	}
+
+	fmt.Println("Your tunnel has been established. leave this terminal window open")
+	fmt.Println("Open a new terminal and run the following command to open a shell:")
+	fmt.Printf("docker exec -it %s /bin/sh\n", id)
+	fmt.Printf("Once you have the shell, you can start the service with %s or do whatever you want!", m.Commands)
+
+	return nil
 }

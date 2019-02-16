@@ -12,12 +12,12 @@ import (
 	"github.com/fsouza/go-dockerclient"
 )
 
-// DockerExec attempts to exec against the container image name supplied
-func DockerExec(containerImg string, command string, notes string) error {
+// IsContainerUp checks if a container is running based on the image name. If true, it returns true, the containers ID and nil. If false, returns false, empty string and error or nil
+func IsContainerUp(containerImg string) (bool, string, error) {
 	endpoint := "unix:///var/run/docker.sock"
 	client, err := docker.NewClient(endpoint)
 	if err != nil {
-		return err
+		return false, "", err
 	}
 
 	found := false
@@ -26,7 +26,7 @@ func DockerExec(containerImg string, command string, notes string) error {
 	for x := 0; x < 15; x++ {
 		containers, err := client.ListContainers(docker.ListContainersOptions{All: false})
 		if err != nil {
-			return err
+			return false, "", err
 		}
 
 		for _, container := range containers {
@@ -37,10 +37,20 @@ func DockerExec(containerImg string, command string, notes string) error {
 		}
 
 		if found {
-			fmt.Println("found")
-			break
+			return true, foundID, nil
 		}
 		time.Sleep(3000 * time.Millisecond)
+	}
+
+	return false, "", fmt.Errorf("Timeout waiting for container")
+}
+
+// DockerExec attempts to exec against the container image name supplied
+func DockerExec(foundID string, command string, notes string) error {
+	endpoint := "unix:///var/run/docker.sock"
+	client, err := docker.NewClient(endpoint)
+	if err != nil {
+		return err
 	}
 
 	fmt.Printf("container found: %s\n", foundID)

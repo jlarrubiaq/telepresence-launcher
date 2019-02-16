@@ -8,7 +8,7 @@ import (
 type LaunchMethod interface {
 	GetCommandPartial() []string
 	DoPreLaunch() error
-	DoPostLaunch() error
+	DoPostLaunch(terminalFlag bool) error
 }
 
 //replace env vars in a string slice.
