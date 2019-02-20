@@ -1,11 +1,14 @@
 package tplauncher
 
-import "os"
+import (
+	"os"
+)
 
 // LaunchMethod is an interface defining all types of launch methods.
 type LaunchMethod interface {
 	GetCommandPartial() []string
 	DoPreLaunch() error
+	DoPostLaunch(terminalFlag bool) error
 }
 
 //replace env vars in a string slice.

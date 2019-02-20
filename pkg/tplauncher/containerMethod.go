@@ -1,8 +1,11 @@
 package tplauncher
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/aaa-ncnu/telepresence-launcher/pkg/dockercmd"
 )
 
 // ContainerMethod is a LaunchMethod. Describes the necessary data to launch a container with telepresence.
@@ -78,9 +81,28 @@ func (m ContainerMethod) GetCommandPartial() []string {
 
 	args = append(args, m.Image)
 
-	if len(m.Commands) > 0 {
-		args = append(args, m.Commands...)
-	}
+	args = append(args, "tail", "-f", "/dev/null")
 
 	return args
+}
+
+// DoPostLaunch runs after the telepresence command starts.
+func (m ContainerMethod) DoPostLaunch(terminalFlag bool) error {
+	up, id, err := dockercmd.IsContainerUp(m.Image)
+	if !up || err != nil {
+		return err
+	}
+
+	if terminalFlag {
+		notes := fmt.Sprintf("Your shell is starting now. To start your service run: %s", m.Commands)
+		err := dockercmd.DockerExec(id, "/bin/sh", notes)
+		return err
+	}
+
+	fmt.Println("Your tunnel has been established. leave this terminal window open")
+	fmt.Println("Open a new terminal and run the following command to open a shell:")
+	fmt.Printf("docker exec -it %s /bin/sh\n", id)
+	fmt.Printf("Once you have the shell, you can start the service with %s or do whatever you want!", m.Commands)
+
+	return nil
 }

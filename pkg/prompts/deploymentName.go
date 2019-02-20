@@ -4,7 +4,8 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-// DeploymentName prompts for the repo owner with default provided.
+// DeploymentName prompts for the user to choose which deployment they want to swap with a telepresence instance.
+// the list of deployments provided comes directly from .tl.yaml
 func DeploymentName(defaultval []string) (string, error) {
 
 	prompt := promptui.Select{
