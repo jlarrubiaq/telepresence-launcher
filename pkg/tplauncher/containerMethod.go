@@ -79,9 +79,11 @@ func (m ContainerMethod) GetCommandPartial() []string {
 		args = append(args, env)
 	}
 
+	args = append(args, "--entrypoint", "tail")
+
 	args = append(args, m.Image)
 
-	args = append(args, "tail", "-f", "/dev/null")
+	args = append(args, "-f", "/dev/null")
 
 	return args
 }

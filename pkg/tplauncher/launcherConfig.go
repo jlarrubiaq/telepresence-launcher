@@ -12,6 +12,7 @@ type LauncherConfig struct {
 	Repo          string `json:"repo"`
 	LabelSelector string `json:"labelSelector"`
 	Deployments   map[string]struct {
+		Expose        string                   `json:"expose"`
 		LaunchMethods []map[string]interface{} `json:"launchMethods"`
 	} `json:"deployments"`
 }
