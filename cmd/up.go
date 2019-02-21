@@ -71,6 +71,7 @@ var upCmd = &cobra.Command{
 			Method: "container",
 			Namespace: namespace,
 			Deployment: k8sdeployment,
+			Expose: Config.Deployments[deployment].Expose,
 			MethodArgs: methodData.GetCommandPartial(),
 			TpChan: make(chan bool),
 		}
@@ -78,8 +79,11 @@ var upCmd = &cobra.Command{
 		// Run the telepresence command in the background. if dead, kill.
 		go telepresencecmd.RunTelepresence(tpArgs)
 
-		methodData.DoPostLaunch(cmdflags.terminal)
-		
+		err = methodData.DoPostLaunch(cmdflags.terminal)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		for {
 			tpDead := <-tpArgs.TpChan
 			if tpDead {

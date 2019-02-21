@@ -1,6 +1,7 @@
 package telepresencecmd
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 )
@@ -10,6 +11,7 @@ type RunTelepresenceOptions struct {
 	Method     string
 	Namespace  string
 	Deployment string
+	Expose     string
 	MethodArgs []string
 	TpChan     chan bool
 }
@@ -22,12 +24,21 @@ func RunTelepresence(options RunTelepresenceOptions) error {
 	args = append(args, options.Deployment)
 	args = append(args, "--namespace")
 	args = append(args, options.Namespace)
+
+	if options.Expose != "" {
+		args = append(args, "--expose")
+		args = append(args, options.Expose)
+	}
+
 	args = append(args, options.MethodArgs...)
 
 	cmd := exec.Command("telepresence", args...)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	fmt.Println("For your reference, this is the command being run behind the scenes...")
+	fmt.Println(cmd.Args)
 
 	err := cmd.Run()
 

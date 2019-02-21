@@ -23,7 +23,7 @@ func IsContainerUp(containerImg string) (bool, string, error) {
 	found := false
 	foundID := ""
 	fmt.Println("waiting for running container")
-	for x := 0; x < 15; x++ {
+	for x := 0; x < 45; x++ {
 		containers, err := client.ListContainers(docker.ListContainersOptions{All: false})
 		if err != nil {
 			return false, "", err
