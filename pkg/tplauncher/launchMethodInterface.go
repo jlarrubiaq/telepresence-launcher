@@ -7,7 +7,7 @@ import (
 // LaunchMethod is an interface defining all types of launch methods.
 type LaunchMethod interface {
 	GetCommandPartial() []string
-	DoPreLaunch() error
+	DoPreLaunch(useBindMounts bool) error
 	DoPostLaunch(terminalFlag bool) error
 }
 

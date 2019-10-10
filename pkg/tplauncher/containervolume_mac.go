@@ -9,11 +9,20 @@ import (
 )
 
 // Helper function to add the volume flags to the command. This will use NFS volumes if running MacOS
-func (m ContainerMethod) createVolumes() error {
-	fmt.Println("NOTE: MacOS uses docker native NFS for mounting volumes. Make sure you have NFS server set up on your host machine.")
+func (m ContainerMethod) createVolumes(useBindMounts bool) error {
+
+	var cmdslice []string
 	for _, volume := range m.Volumes {
-		cmdslice := []string{"volume", "create", "--driver", "local", "-o", "type=nfs", "-o", "o=addr=host.docker.internal,rw", "-o"}
-		cmdslice = append(cmdslice, "device=:"+volume.Src)
+		if useBindMounts {
+			cmdslice = []string{"volume", "create", "--driver", "local", "-o", "o=bind", "-o", "type=none", "-o"}
+			cmdslice = append(cmdslice, "device="+volume.Src)
+			fmt.Println("NOTE: Using Bind mounts due to usebindmount flag being true.")
+		} else {
+			cmdslice = []string{"volume", "create", "--driver", "local", "-o", "type=nfs", "-o", "o=addr=host.docker.internal,rw", "-o"}
+			cmdslice = append(cmdslice, "device=:"+volume.Src)
+			fmt.Println("NOTE: MacOS uses docker native NFS for mounting volumes. Make sure you have NFS server set up on your host machine.")
+		}
+
 		cmdslice = append(cmdslice, volume.Name)
 
 		cmd := exec.Command("docker", escapableEnvVarReplaceSlice(cmdslice)...)

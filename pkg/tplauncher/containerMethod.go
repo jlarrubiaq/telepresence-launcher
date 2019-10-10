@@ -39,7 +39,7 @@ type Mount struct {
 }
 
 // DoPreLaunch is the logic for tasks that should run before a container is launched.
-func (m ContainerMethod) DoPreLaunch() error {
+func (m ContainerMethod) DoPreLaunch(useBindMounts bool) error {
 
 	for _, buildStep := range m.BuildSteps {
 		cmd := exec.Command(buildStep.Cmd, escapableEnvVarReplaceSlice(buildStep.Args)...)
@@ -51,7 +51,7 @@ func (m ContainerMethod) DoPreLaunch() error {
 		}
 	}
 
-	err := m.createVolumes()
+	err := m.createVolumes(useBindMounts)
 	if err != nil {
 		return err
 	}

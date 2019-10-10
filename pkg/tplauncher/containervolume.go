@@ -9,7 +9,7 @@ import (
 )
 
 // Helper function to add the volume flags to the command.
-func (m ContainerMethod) createVolumes() error {
+func (m ContainerMethod) createVolumes(useBindMounts bool) error {
 	for _, volume := range m.Volumes {
 		cmdslice := []string{"volume", "create", "--driver", "local", "-o", "o=bind", "-o", "type=none", "-o"}
 		cmdslice = append(cmdslice, "device="+volume.Src)

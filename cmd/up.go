@@ -13,7 +13,8 @@ import (
 )
 
 type Flags struct {
-	terminal bool
+	terminal      bool
+	useBindMounts bool
 }
 
 var cmdflags Flags
@@ -64,16 +65,16 @@ var upCmd = &cobra.Command{
 		_, err = prompts.Continue()
 		handleErr(err)
 
-		err = methodData.DoPreLaunch()
+		err = methodData.DoPreLaunch(cmdflags.useBindMounts)
 		handleErr(err)
 
 		tpArgs := telepresencecmd.RunTelepresenceOptions{
-			Method: "container",
-			Namespace: namespace,
+			Method:     "container",
+			Namespace:  namespace,
 			Deployment: k8sdeployment,
-			Expose: Config.Deployments[deployment].Expose,
+			Expose:     Config.Deployments[deployment].Expose,
 			MethodArgs: methodData.GetCommandPartial(),
-			TpChan: make(chan bool),
+			TpChan:     make(chan bool),
 		}
 
 		// Run the telepresence command in the background. if dead, kill.
@@ -95,5 +96,6 @@ var upCmd = &cobra.Command{
 
 func init() {
 	upCmd.Flags().BoolVar(&cmdflags.terminal, "terminal", false, "(experimental) Automatically launch a terminal after initial setup.")
+	upCmd.Flags().BoolVar(&cmdflags.useBindMounts, "usebindmounts", false, "macos only: use bind mounts instead of NFS.")
 	rootCmd.AddCommand(upCmd)
 }
