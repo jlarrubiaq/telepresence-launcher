@@ -115,4 +115,3 @@ To build the `telepresence-launcher`:
 This repository makes use of [Go's modules](https://github.com/golang/go/wiki/Modules), with [vendoring](https://github.com/golang/go/wiki/Modules#how-do-i-use-vendoring-with-modules-is-vendoring-going-away) for dependency management.
 
 When a dependency is added to the codebase, `go mod vendor` should be ran.
-
