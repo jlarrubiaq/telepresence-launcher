@@ -15,7 +15,7 @@ func (k KubeClient) GetDeployment(namespace string, deploymentPartial string) (s
 
 	options := metav1.ListOptions{}
 
-	deployments, err := k.clientSet.ExtensionsV1beta1().Deployments(namespace).List(options)
+	deployments, err := k.clientSet.AppsV1().Deployments(namespace).List(options)
 
 	if err != nil {
 		return "", err

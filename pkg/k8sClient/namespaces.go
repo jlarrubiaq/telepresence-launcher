@@ -14,7 +14,7 @@ func (k KubeClient) ListNamespaces(labelSelector string) ([]string, error) {
 		LabelSelector: labelSelector,
 	}
 
-	deployments, err := k.clientSet.ExtensionsV1beta1().Deployments("").List(options)
+	deployments, err := k.clientSet.AppsV1().Deployments("").List(options)
 
 	if err != nil {
 		return []string{}, err
