@@ -29,7 +29,7 @@ func (m ContainerMethod) createVolumes(useBindMounts bool) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
-		fmt.Printf("creating volme with command %q\n", cmd.Args)
+		fmt.Printf("creating volume with command %q\n", cmd.Args)
 
 		err := cmd.Run()
 		if err != nil {
